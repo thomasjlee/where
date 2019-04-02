@@ -8,33 +8,33 @@ end
 RSpec.describe Where do
   before do
     @boris = {
-      name: 'Boris The Blade',
+      name:  'Boris The Blade',
       quote: 'Heavy is good. Heavy is reliable. '\
              "If it doesn't work you can always hit them.",
       title: 'Snatch',
-      rank: 4
+      rank:  4
     }
 
     @charles = {
-      name: 'Charles De Mar',
+      name:  'Charles De Mar',
       quote: 'Go that way, really fast. If something gets in your way, turn.',
       title: 'Better Off Dead',
-      rank: 3
+      rank:  3
     }
 
     @wolf = {
-      name: 'The Wolf',
+      name:  'The Wolf',
       quote: 'I think fast, I talk fast and I need you guys to act fast '\
              'if you wanna get out of this',
       title: 'Pulp Fiction',
-      rank: 4
+      rank:  4
     }
 
     @glen = {
-      name: 'Glengarry Glen Ross',
+      name:  'Glengarry Glen Ross',
       quote: 'Put. That coffee. Down. Coffee is for closers only.',
       title: 'Blake',
-      rank: 5
+      rank:  5
     }
 
     @fixtures = [@boris, @charles, @wolf, @glen]
@@ -43,30 +43,20 @@ RSpec.describe Where do
   it 'finds an exact match' do
     expect(@fixtures.where(name: 'The Wolf')).to eq [@wolf]
   end
-end
 
-# require 'minitest/autorun'
-#
-# class WhereTest < Minitest::Test
-#
-#   def test_where_with_exact_match
-#     assert_equal [@wolf], @fixtures.where(:name => 'The Wolf'),
-#   end
-#
-#   def test_where_with_partial_match
-#     assert_equal [@charles, @glen], @fixtures.where(:title => /^B.*/)
-#   end
-#
-#   def test_where_with_mutliple_exact_results
-#     assert_equal [@boris, @wolf], @fixtures.where(:rank => 4)
-#   end
-#
-#   def test_with_with_multiple_criteria
-#     assert_equal [@wolf], @fixtures.where(:rank => 4, :quote => /get/)
-#   end
-#
-#   def test_with_chain_calls
-#     assert_equal [@charles], @fixtures.where(:quote => /if/i).where(:rank => 3)
-#   end
-# end
-#
+  it 'finds a partial match' do
+    expect(@fixtures.where(title: /^B.*/)).to eq [@charles, @glen]
+  end
+
+  it 'finds multiple exact matches' do
+    expect(@fixtures.where(rank: 4)).to eq [@boris, @wolf]
+  end
+
+  it 'finds matches with multiple criteria' do
+    expect(@fixtures.where(rank: 4, quote: /get/)).to eq [@wolf]
+  end
+
+  it 'can be chained' do
+    expect(@fixtures.where(quote: /if/i).where(rank: 3)).to eq [@charles]
+  end
+end
