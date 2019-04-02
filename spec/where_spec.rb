@@ -45,22 +45,18 @@ RSpec.describe Where do
   end
 
   it 'finds a partial match' do
-    skip
     expect(@fixtures.where(title: /^B.*/)).to eq [@charles, @glen]
   end
 
   it 'finds multiple exact matches' do
-    skip
     expect(@fixtures.where(rank: 4)).to eq [@boris, @wolf]
   end
 
   it 'finds matches with multiple criteria' do
-    skip
     expect(@fixtures.where(rank: 4, quote: /get/)).to eq [@wolf]
   end
 
   it 'can be chained' do
-    skip
     expect(@fixtures.where(quote: /if/i).where(rank: 3)).to eq [@charles]
   end
 end
