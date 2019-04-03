@@ -67,6 +67,34 @@ RSpec.describe Where do
     end
   end
 
+  context 'when passed an array' do
+    context 'using ? placeholders' do
+      it 'finds an exact match' do
+        expect(@fixtures.where(['title = ?', 'Snatch'])).to eq [@boris]
+      end
+
+      it 'finds a match with multiple criteria' do
+        conditions = ['name = ? and rank = ?', 'Glengarry Glen Ross', 5]
+        expect(@fixtures.where(conditions)).to eq [@glen]
+      end
+    end
+
+    context 'using named placeholders' do
+      it 'finds an exact match' do
+        condition = ['title = :title', { title: 'Snatch' }]
+        expect(@fixtures.where(condition)).to eq [@boris]
+      end
+
+      it 'finds a match with multiple criteria' do
+        conditions = [
+          'name = :name and rank = :rank',
+          { name: 'Glengarry Glen Ross', rank: 5 }
+        ]
+        expect(@fixtures.where(conditions)).to eq [@glen]
+      end
+    end
+  end
+
   context 'when passed a hash' do
     it 'finds an exact match' do
       expect(@fixtures.where(name: 'The Wolf')).to eq [@wolf]
