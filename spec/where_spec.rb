@@ -40,23 +40,51 @@ RSpec.describe Where do
     @fixtures = [@boris, @charles, @wolf, @glen]
   end
 
-  it 'finds an exact match' do
-    expect(@fixtures.where(name: 'The Wolf')).to eq [@wolf]
+  context 'when passed a string' do
+    it 'finds an exact match' do
+      expect(@fixtures.where("name = 'The Wolf'")).to eq [@wolf]
+    end
+
+    it 'finds a match with multiple criteria' do
+      condition = "name = 'The Wolf' and title = 'Pulp Fiction'"
+      expect(@fixtures.where(condition)).to eq [@wolf]
+    end
+
+    it 'casts string to number if "column" type is a number' do
+      condition = "name = 'Charles De Mar' and rank = '3'"
+      expect(@fixtures.where(condition)).to eq [@charles]
+    end
+
+    it 'can be chained' do
+      condition_a = "name = 'Charles De Mar'"
+      condition_b = "rank = '3'"
+      expect(@fixtures.where(condition_a).where(condition_b)).to eq [@charles]
+    end
   end
 
-  it 'finds a partial match' do
-    expect(@fixtures.where(title: /^B.*/)).to eq [@charles, @glen]
-  end
+  context 'when passed a hash' do
+    it 'finds an exact match' do
+      expect(@fixtures.where(name: 'The Wolf')).to eq [@wolf]
+    end
 
-  it 'finds multiple exact matches' do
-    expect(@fixtures.where(rank: 4)).to eq [@boris, @wolf]
-  end
+    it 'finds a partial match' do
+      expect(@fixtures.where(title: /^B.*/)).to eq [@charles, @glen]
+    end
 
-  it 'finds matches with multiple criteria' do
-    expect(@fixtures.where(rank: 4, quote: /get/)).to eq [@wolf]
-  end
+    it 'finds multiple exact matches' do
+      expect(@fixtures.where(rank: 4)).to eq [@boris, @wolf]
+    end
 
-  it 'can be chained' do
-    expect(@fixtures.where(quote: /if/i).where(rank: 3)).to eq [@charles]
+    it 'finds a match with multiple criteria' do
+      expect(@fixtures.where(rank: 4, quote: /get/)).to eq [@wolf]
+    end
+
+    it 'can be chained' do
+      expect(@fixtures.where(quote: /if/i).where(rank: 3)).to eq [@charles]
+    end
+
+    it 'returns an empty array when there is no match' do
+      expect(@fixtures.where(rank: 10)).to eq []
+    end
   end
 end
