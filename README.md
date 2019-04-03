@@ -12,6 +12,12 @@ Download the repo and run `bundle install`.
 
 To run the specs, run `bundle exec rspec`.
 
+## Assumptions
+
+A proper SQL abstraction should include sanitization, for which ActiveRecord::Sanitization could be used.
+
+For the purposes of this exercise I've omitted this feature.
+
 ## Original Instructions
 
 ### Array Extension
