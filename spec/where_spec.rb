@@ -50,6 +50,11 @@ RSpec.describe Where do
       expect(@fixtures.where(condition)).to eq [@wolf]
     end
 
+    it 'allows interpolation' do
+      name = 'Boris The Blade'
+      expect(@fixtures.where("name = #{name}")).to eq [@boris]
+    end
+
     it 'casts string to number if "column" type is a number' do
       condition = "name = 'Charles De Mar' and rank = '3'"
       expect(@fixtures.where(condition)).to eq [@charles]
