@@ -6,17 +6,14 @@ This project was built with Ruby 2.6.1 with RSpec 3.8.0.
 
 Download the repo and run `bundle install`.
 
-! TODO
-
 ## Specs
 
 To run the specs, run `bundle exec rspec`.
 
-## Assumptions
+## Omissions
 
-A proper SQL abstraction should include sanitization, for which ActiveRecord::Sanitization could be used.
-
-For the purposes of this exercise I've omitted this feature.
+ * A proper SQL abstraction should include sanitization, for which ActiveRecord::Sanitization could be used. For the purposes of this exercise I've omitted this feature.
+ * #where in Ruby on Rails can handle many more formats, such as sprintf-style placeholders.
 
 ## Original Instructions
 
