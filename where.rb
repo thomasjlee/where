@@ -36,34 +36,20 @@ module Where
     when String
       template = conditions
       template = extract_column_names(template)
-
-      template.map! do |column_name, value|
-        [column_name.to_sym, value.gsub(OUTER_QUOTES, '')]
-      end
-
-      template.to_h
+      map_template_to_values(:string, template)
     when Array
       template = conditions.first
       values   = conditions[1..-1]
       template = extract_column_names(template)
 
       if values.first.is_a?(Hash)
-        values = values.first
-
-        template.each do |column_and_placeholder|
-          column_and_placeholder[0] = column_and_placeholder[0].to_sym
-          placeholder = column_and_placeholder[1].delete(':').to_sym
-          column_and_placeholder[1] = values[placeholder]
-        end
+        map_template_to_values(:named_placeholders, template, values.first)
       else
-        template.each do |column_and_placeholder|
-          column_and_placeholder[0] = column_and_placeholder[0].to_sym
-          column_and_placeholder[1] = values.shift
-        end
+        map_template_to_values(:ordered_placeholders, template, values)
       end
-
-      template.to_h
     end
+
+    template.to_h
   end
 
   def extract_column_names(template)
@@ -71,6 +57,26 @@ module Where
 
     [template].flatten.map do |condition|
       condition.split('=').map(&:strip)
+    end
+  end
+
+  def map_template_to_values(option, template, values = nil)
+    case option
+    when :string
+      template.map! do |column_name, value|
+        [column_name.to_sym, value.gsub(OUTER_QUOTES, '')]
+      end
+    when :named_placeholders
+      template.each do |column_and_placeholder|
+        column_and_placeholder[0] = column_and_placeholder[0].to_sym
+        placeholder = column_and_placeholder[1].delete(':').to_sym
+        column_and_placeholder[1] = values[placeholder]
+      end
+    when :ordered_placeholders
+      template.each do |column_and_placeholder|
+        column_and_placeholder[0] = column_and_placeholder[0].to_sym
+        column_and_placeholder[1] = values.shift
+      end
     end
   end
 end

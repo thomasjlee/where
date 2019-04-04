@@ -68,7 +68,7 @@ RSpec.describe Where do
   end
 
   context 'when passed an array' do
-    context 'using ? placeholders' do
+    context 'using ordered placeholders' do
       it 'finds an exact match' do
         expect(@fixtures.where(['title = ?', 'Snatch'])).to eq [@boris]
       end
